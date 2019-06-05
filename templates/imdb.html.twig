@@ -1,0 +1,46 @@
+{% extends 'solidstate/solidstate-base.html.twig' %}
+{% block banner %}
+    <header id="header" >
+        <h1><a href="/">Lukasz Andrzejak - Meltir</a></h1>
+        <nav>
+            <a href="#menu">Menu</a>
+        </nav>
+    </header>
+{% endblock %}
+{% block main_body %}
+    <header>
+        <div class="inner">
+            <h2>My movie ratings</h2>
+            <p>Movies I watched and liked (or disliked) enough to rate.</p>
+            <p>Also an example of a web scraper wrapper for a non-api integration.</p>
+        </div>
+    </header>
+    <section id="movies" class="wrapper alt style1">
+        <div class="inner">
+            <p>My generall rule of thumb is <5 avoid, 5 OK, >5 worth it for one reason or another.</p>
+            <p>Some of these have a high rating because they are fun, some are well made, some make me reconsider my life choices, some because they are beautiful to watch.</p>
+            <p>Best and most recent ones are listed first !</p>
+            <section class="features">
+                {% for movie in movies %}
+                    {% set body %}
+                        Released in  {{  movie.year|date('Y') }}, my rating <b>{{  movie.myRating }}</b>/10.</p>
+                        <p>Synopsis: <br />{{ movie.synopsis }}
+                    {% endset %}
+                    {% set item = {
+                        'linkImage': movie.poster,
+                        'title': movie.title,
+                        'linkUrl': movie.imdbLink,
+                        'linkTitle': 'Movie details',
+                        'body': body
+                        }
+                    %}
+
+                    {% include 'solidstate/gallery-item.html.twig'  with item %}
+                {% endfor %}
+            </section>
+        </div>
+    </section>
+    {% set style_id = 2 %}
+    {{ include('solidstate/paginator.html.twig',{'page':paginator.page,'pages':paginator.pages,'base_route':paginator.base_route,'route_params':{}}) }}
+    {% block pagination %}{% endblock %}
+{% endblock %}

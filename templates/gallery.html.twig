@@ -1,0 +1,44 @@
+{% extends 'solidstate/solidstate-base.html.twig' %}
+{% set style_id=2 %}
+{% block banner %}
+    <header id="header" >
+        <h1><a href="/">Lukasz Andrzejak - Meltir</a></h1>
+        <nav>
+            <a href="#menu">Menu</a>
+        </nav>
+    </header>
+{% endblock %}
+{% block main_body %}
+    <header>
+        <div class="inner">
+            <h2>Website gallery</h2>
+            <p>Some of the websites I have worked on over the years.</p>
+            <p>Most are gone or upgraded by now, but a few are still kicking around.</p>
+            <p>Some I implemented the designs on, I worked on the backends for all of them, and designed <b>one</b> of them (no points for guessing which one).</p>
+        </div>
+    </header>
+    {% for gallery in galleries %}
+        {% set style_id = style_id+1 %}
+        {% if style_id > 6 %}
+            {% set style_id=1 %}
+        {% endif %}
+        <section id="{{ random(100) }}" class="wrapper {{ cycle(['','alt'],style_id) }} style{{ style_id }}">
+            <div class="inner">
+                <h2 class="major">{{ gallery.title }}</h2>
+                <p>{{ gallery.body|raw }}</p>
+                <section class="features">
+                    {% for gallery_item in gallery.pagePosts %}
+                        {% set item = {
+                            'linkImage': asset(postimagepath ~ gallery_item.linkImage),
+                            'title': gallery_item.title,
+                            'linkUrl': gallery_item.linkUrl,
+                            'linkTitle': gallery_item.linkTitle,
+                            'body': gallery_item.body }
+                        %}
+                        {% include 'solidstate/gallery-item.html.twig' with {'item': item} %}
+                    {% endfor %}
+                </section>
+            </div>
+        </section>
+    {% endfor %}
+{% endblock %}

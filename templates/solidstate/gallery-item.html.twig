@@ -1,0 +1,8 @@
+<article>
+    <a class="image_feature" ><img src="{{ item.linkImage }}" alt="{{ item.title }}" /></a>
+    <h3 class="major">{{ item.title }}</h3>
+    <p>{{ item.body|raw }}</p>
+    {% if item.linkUrl is not empty %}
+    <a href="{{ item.linkUrl }}" class="special" target="_blank">{{ item.linkTitle }}</a>
+    {% endif %}
+</article>

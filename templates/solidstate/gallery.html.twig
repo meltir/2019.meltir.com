@@ -1,0 +1,15 @@
+<section id="gallery{{ random('1000') }}" class="wrapper alt style1">
+    <div class="inner">
+        <h2 class="major">{{ gallery.title }}</h2>
+        <p>{{ gallery.descriptions }}</p>
+        <section class="features">
+            {% for item in gallery.items %}
+                {{ include 'gallery-item.html.twig' with 'gallery': item}) }}
+            {% endfor %}
+        </section>
+
+        <ul class="actions">
+            <li><a href="#" class="button">Browse All</a></li>
+        </ul>
+    </div>
+</section>

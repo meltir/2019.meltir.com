@@ -1,0 +1,57 @@
+{#
+page -- current page
+pages -- how many pages are there
+base_route -- base route to which a 'page' param is passed
+max_pages how many pages to display at once as a maximum - set to an odd number so that current page is in the middle
+
+#}
+{% set max_pages = 9 %}
+{% set surround_pages = max_pages // 2 %}
+{% if ((page - surround_pages) <= 0) %}
+    {% set start_page = 1 %}
+{% else %}
+    {% set start_page = page - surround_pages %}
+{% endif %}
+{% if ((page + surround_pages) <= pages) %}
+    {% set end_page = max(page + surround_pages,max_pages) %}
+{% else %}
+    {% set end_page = pages %}
+    {% set start_page = pages - max_pages + 1 %}
+{% endif %}
+
+{% if end_page > pages %}
+    {% set end_page = pages %}
+{% endif %}
+{% if start_page < 1 %}
+    {% set start_page = 1 %}
+{% endif %}
+
+{% if pages > 1 %}
+    {% block pagination %}
+    <section id="pagination" class="wrapper spotlight {{ cycle(['','alt'],style_id) }} style{{ style_id }}">
+        <div class="inner">
+            <div class="content">
+                <ul class="pagination">
+                    {% if page == 1 %}
+                        <li><span class="button small disabled">Prev</span></li>
+                    {% else %}
+                        <li><a href="{{ path(base_route,{'page':page-1}|merge(route_params)) }}" class="button small">Prev</a></li>
+                    {% endif %}
+                    {% for i in start_page..end_page %}
+                        {% if i == page %}
+                            <li><a class="page active">{{ i }}</a></li>
+                        {% else %}
+                            <li><a href="{{ path(base_route,{'page':i}|merge(route_params)) }}" class="page">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if page == pages %}
+                        <li><span class="button small disabled">Next</span></li>
+                    {% else %}
+                        <li><a href="{{ path(base_route,{'page':page+1}|merge(route_params)) }}" class="button small">Next</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </section>
+    {% endblock %}
+{% endif %}

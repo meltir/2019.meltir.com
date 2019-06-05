@@ -1,0 +1,106 @@
+#easy_admin:
+#    entities:
+#        # List the entity class name you want to manage
+#        - App\Entity\Product
+#        - App\Entity\Category
+#        - App\Entity\User
+easy_admin:
+  site_name: 'meltir.com admin'
+  design:
+    menu:
+      - { label: 'Simple CMS'}
+      - PagePost
+      - { label: 'Youtube' }
+      - YtCategories
+      - YtChannels
+      - YtVideos
+      - { label: 'Import channels', route: 'youtube_channels_import', icon: 'youtube' }
+      - { label: 'Import videos', route: 'youtube_videos', icon: 'youtube' }
+      - { label: 'Imdb' }
+      - ImdbMovies
+      - { label: 'Import movies', route: 'imdb_import', icon: 'imdb' }
+  user:
+    name_property_path: username
+  entities:
+    PagePost:
+      label: 'Paragraphs'
+      class: App\Entity\PagePost
+      list:
+        title: 'As seen on pages'
+        sort: 'page'
+        max_results: 50
+        fields:
+          - { property: 'title' }
+          - { property: 'active' }
+          - { property: 'page' }
+          - { property: 'post_order' }
+          - { property: 'pagePosts',type: 'association', targetEntity: 'App\Entity\PagePost', associationType: 4, label: 'Subposts' }
+      form:
+        fields:
+          - { property: 'title' }
+          - { property: 'link_image_file', type: 'vich_image' }
+          - { property: 'link_url' }
+          - { property: 'link_title' }
+          - { property: 'body', type: 'fos_ckeditor' }
+          - { property: 'active' }
+          - { property: 'page', type: 'choice', type_options: { choices: {'Main page': 'home','Website gallery': 'gallery','My thougts on': 'thoughts','Contact me':'contact','CV': 'cv' }}}
+          - { property: 'post_order' }
+          - { property: 'parent_post' }
+    YtCategories:
+      label: 'Yotube channel categories'
+      class: App\Entity\YtCategories
+      list:
+        title: 'Youtube channel categories'
+      form:
+        fields:
+          - { property: 'name' }
+          - { property: 'active' }
+          - { property: 'cat_order' }
+    YtChannels:
+      label: 'Youtube channels'
+      class: App\Entity\YtChannels
+      disabled_actions: ['edit','new']
+      list:
+        sort: 'category'
+        batch_actions:
+          - { name: 'unlist' }
+          - { name: 'news' }
+          - { name: 'funny' }
+          - { name: 'science' }
+          - { name: 'geek' }
+          - { name: 'retro' }
+          - { name: 'diy' }
+          - { name: 'dev' }
+        title: 'Youtube channels'
+        collapse_actions: true
+        max_results: 50
+        fields:
+          - { property: 'chan_name' }
+          - { property: 'thumb', type: 'image' }
+          - { property: 'category' }
+          - { property: 'YtVideos', type: 'association', targetEntity: 'App\Entity\YtVideos', associationType: 4, label: 'Video count' }
+    YtVideos:
+      label: 'Youtube videos'
+      disabled_actions: ['edit','new']
+      list:
+        title: 'Youtube videos'
+        max_results: 100
+        fields:
+          - { property: 'thumb', type: 'image' }
+          - { property: 'title' }
+          - { property: 'date_published' }
+          - { property: 'liked' }
+          - { property: 'active' }
+          - { property: 'channel'}
+          - { property: 'channel.category', label: 'Category' }
+      class: App\Entity\YtVideos
+    ImdbMovies:
+      disabled_actions: ['edit','new']
+      class: App\Entity\ImdbMovies
+      list:
+        fields:
+          - { property: 'title' }
+          - { property: 'my_rating' }
+          - { property: 'imdb_link', type: 'url' }
+          - { property: 'poster', type: 'image' }
+          - { property: 'year', format: 'Y' }

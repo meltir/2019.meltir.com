@@ -1,0 +1,28 @@
+{% extends 'home.html.twig' %}
+{% block banner %}
+    <header id="header" >
+        <h1><a href="/">Lukasz Andrzejak - Meltir</a></h1>
+        <nav>
+            <a href="#menu">Menu</a>
+        </nav>
+    </header>
+{% endblock %}
+
+{% block main_body %}
+    <header>
+        <div class="inner">
+            <h2>Curriculum Vitae</h2>
+            <p>Last entry ends in 2018 to simplify the long brakes I could afford (spending time with friends and family in Poland, totaling over a year)</p>
+            <p>Current as of June 2019, please try <a href="https://www.linkedin.com/in/meltir" target="_blank">linkedin</a> for the most recent version</p>
+            <p>The past few weeks were spent catching up with symfony flex and docker</p>
+        </div>
+    </header>
+    <div class="wrapper">
+        <div class="inner">
+            {% for item in posts %}
+                <h3 class="major">{{ item.title }}</h3>
+                {{ item.body|raw }}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

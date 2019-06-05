@@ -1,0 +1,63 @@
+{% extends 'solidstate/solidstate-base.html.twig' %}
+{% block banner %}
+    <header id="header" >
+        <h1><a href="/">Lukasz Andrzejak - Meltir</a></h1>
+        <nav>
+            <a href="#menu">Menu</a>
+        </nav>
+    </header>
+{% endblock %}
+{% block main_body %}
+    <header>
+        <div class="inner">
+            <h2>My youtube feed</h2>
+            <p>This is how I spend my leisure time.</p>
+            <p>This is also how I handle pagination, ajax, and third party integrations using existing libraries.</p>
+        </div>
+    </header>
+    <section class="wrapper spotlight alt style1">
+        <div class="inner">
+            <div class="content">
+                <h2 class="major">Channel categories</h2>
+                <p>Well, there are too many here to simply list them all. It would be chaos.</p>
+                <p>So, I grouped them a bit. It has the side effect of making the logic slightly more interesting.</p>
+                <ul class="actions fit small">
+                    {% for category in categories %}
+                        {% set route = path('youtube_list',{'category': category.slug}) %}
+                        {% set current_cat = (category == current_category) ? true : false %}
+                        <li><a {{ (not current_cat) ? 'href=' ~ route }} class="button fit small {{ current_cat ? 'primary' }}">{{ category.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </section>
+    {% set style_id=1 %}
+    {% for channel in channels %}
+        {% set style_id = style_id+1 %}
+        {% if style_id > 6 %}
+            {% set style_id=1 %}
+        {% endif %}
+        <section class="wrapper spotlight {{ cycle(['','alt'],style_id) }} style{{ style_id }}">
+            <div class="inner">
+                <a class="image"><img src="{{ channel.thumb }}" alt="{{ channel.chanName }}" /></a>
+                <div class="content">
+                    <h2 class="major">{{ channel.chanName }}</h2>
+                    <p>{{ channel.chanDescription|slice(0,200) ~ '...' }}</p>
+                    <a href="https://www.youtube.com/channel/{{ channel.chanId }}" class="special" target="_blank">View channel</a>
+                </div>
+            </div>
+            <div class="inner" id="videos_{{ channel.chanId }}">
+                {{ include('youtube_videos.html.twig',{'videos':videos[channel.id]}) }}
+            </div>
+            <div class="inner">
+                <ul class="actions fit">
+                    <li><a class="button videolist_prev disabled" page="1" chanid="{{ channel.chanId }}">Prev</a></li>
+                    <li><a class="button videolist_next" page="2" chanid="{{ channel.chanId }}">Next</a></li>
+                </ul>
+            </div>
+        </section>
+    {% endfor %}
+    {% set style_id = style_id +1 %}
+    {{ include('solidstate/paginator.html.twig',{'page':paginator.page,'pages':paginator.pages,'base_route':paginator.base_route,'route_params':{'category':current_category.slug}}) }}
+    {% block pagination %}{% endblock %}
+{% endblock %}

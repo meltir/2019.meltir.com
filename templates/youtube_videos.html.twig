@@ -1,0 +1,12 @@
+<section class="features">
+    {% for video in videos %}
+        {% set item = {
+            'linkImage': video.thumb,
+            'title': video.title,
+            'linkUrl': 'https://www.youtube.com/watch?v=' ~ video.videoid,
+            'linkTitle': 'View video',
+            'body': 'Published on ' ~ video.datePublished|date('d-m-Y') }
+        %}
+        {% include 'solidstate/gallery-item.html.twig'  with item %}
+    {% endfor %}
+</section>

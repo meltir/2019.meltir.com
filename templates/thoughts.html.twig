@@ -1,0 +1,31 @@
+{% extends 'home.html.twig' %}
+{% block banner %}
+    <header id="header" >
+        <h1><a href="/">Lukasz Andrzejak - Meltir</a></h1>
+        <nav>
+            <a href="#menu">Menu</a>
+        </nav>
+    </header>
+{% endblock %}
+
+{% block main_body %}
+    <header>
+        <div class="inner">
+            <h2>Ramblings on tools and other thoughts</h2>
+            <p>None of the below is gospel.<i>These are, like, my opinions, man.</i></p>
+            <p>Don’t take this page too seriously, there are jokes and other slightly cheeky bits on it.</p>
+            <p>I don't like to do work where someone else has already done it for me.</p>
+            <p>What I do like is the practices of <a href="https://en.wikipedia.org/wiki/KISS_principle" target="_blank">KISS</a> and <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself" target="_blank">DRY</a>. Google them.</p>
+            <p>Or click the links. Who am I to tell you what to do?</p>
+            <p>This page should give you an idea of what my approach to development is.</p>
+        </div>
+    </header>
+    <div class="wrapper">
+        <div class="inner">
+            {% for item in posts %}
+                <h3 class="major">{{ item.title }}</h3>
+                {{ item.body|raw }}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

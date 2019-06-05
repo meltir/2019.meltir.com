@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<!--
+	Solid State by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+    <title>Lukasz Andrzejak @ Meltir</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}" />
+    <noscript><link rel="stylesheet" href="{{ asset('assets/css/noscript.css') }}" /></noscript>
+    {% block stylesheets %}{% endblock %}
+</head>
+<body class="is-preload">
+
+<!-- Page Wrapper -->
+<div id="page-wrapper">
+
+    <!-- Header -->
+    {% block header %}
+    <header id="header" class="alt">
+        <h1><a href="/">Lukasz Andrzejak - Meltir</a></h1>
+        <nav>
+            <a href="#menu">Menu</a>
+        </nav>
+    </header>
+    {% endblock %}
+{% set menuitems = [
+    {'path':'home','title':'Home'},
+    {'path':'gallery','title':'Projects gallery'},
+    {'path':'cv','title':'CV'},
+    {'path':'youtube_list','title':'My youtube'},
+    {'path':'imdb_list','title':'My IMDB'},
+    {'path':'thoughts','title':'My thoughts'}
+] %}
+    <!-- Menu -->
+    <nav id="menu">
+        <div class="inner">
+            <h2>Menu</h2>
+            <ul class="links">
+                {% for menu in menuitems %}
+                    <li><a href="{{ path(menu.path) }}" title="{{ menu.title }}">{{ menu.title }}</a></li>
+                {% endfor %}
+            </ul>
+            <a href="#" class="close">Close</a>
+        </div>
+    </nav>
+
+    <!-- Banner -->
+    {% block banner %}
+    <section id="banner">
+        <div class="inner">
+            <div class="logo"><img src="{{ asset('images/demon-circle.svg') }}" alt="My avatar from 2003"></div>
+            <h2>Lukasz Andrzejak - Meltir</h2>
+            <p>Senior PHP Developer</p>
+        </div>
+    </section>
+    {% endblock %}
+
+    <!-- Wrapper -->
+    <section id="wrapper">
+        {% block main_body %}
+        {% endblock %}
+    </section>
+
+    <!-- Footer -->
+    <section id="footer">
+        <div class="inner">
+            <h2 class="major">Get in touch</h2>
+            <p>If you are looking to expand your team, like something I list here - get in touch on <a href="https://www.linkedin.com/in/meltir" target="_blank">LinkedIn</a> !</p>
+            <ul class="contact">
+                <li class="fa-home">Somewhere in North West London</li>
+                <li class="fa-facebook"><a href="https://www.facebook.com/meltir" target="_blank">facebook.com/meltir</a></li>
+                <li class="fa-linkedin"><a href="https://www.linkedin.com/in/meltir" target="_blank">linkedin.com/in/meltir</a></li>
+                <li class="fa-github"><a href="https://github.com/meltir?tab=stars" target="_blank">github.com/meltir</a></li>
+                <li class="fa-spotify"><a href="https://play.spotify.com/user/meltir" target="_blank">spotify.com/user/meltir</a></li>
+            </ul>
+            <ul class="copyright">
+                <li>&copy; www.meltir.com, All rights reserved.</li><li>Design: <a href="http://html5up.net" target="_blank">HTML5 UP</a></li>
+            </ul>
+        </div>
+    </section>
+
+</div>
+
+<!-- Scripts -->
+<script src="{{ asset('assets/js/jquery.min.js') }}"></script>
+<script src="{{ asset('assets/js/jquery.scrollex.min.js') }}"></script>
+<script src="{{ asset('assets/js/browser.min.js') }}"></script>
+<script src="{{ asset('assets/js/breakpoints.min.js') }}"></script>
+<script src="{{ asset('assets/js/util.js') }}"></script>
+<script src="{{ asset('assets/js/main.js') }}"></script>
+{% block javascripts %}{% endblock %}
+</body>
+</html>

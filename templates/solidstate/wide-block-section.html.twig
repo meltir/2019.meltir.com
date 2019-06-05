@@ -1,0 +1,16 @@
+<section class="wrapper spotlight {{ cycle(['','alt'],style_id) }} style{{ style_id }}">
+    <div class="inner">
+            {% if block.linkImage is not empty %}
+                <a class="image"><img src="{{ asset(postimagepath ~ block.linkImage) }}" alt="{{ block.title }}" /></a>
+            {% endif %}
+        <div class="content">
+            {% if block.title is defined %}
+            <h2 class="major">{{ block.title }}</h2>
+            {% endif %}
+            <p>{{ block.body|raw }}</p>
+            {% if block.linkUrl is not empty %}
+            <a href="{{ block.linkUrl }}" class="special">{{ block.linkTitle }}</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
