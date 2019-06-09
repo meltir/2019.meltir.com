@@ -4,13 +4,8 @@ namespace App\Repository;
 
 use App\Entity\YtCategories;
 use App\Entity\YtChannels;
-use App\Entity\YtVideos;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Google_Client;
-use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-use Google_Service_YouTube;
-use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * @method YtChannels|null find($id, $lockMode = null, $lockVersion = null)
@@ -20,29 +15,27 @@ use Symfony\Component\Stopwatch\Stopwatch;
  */
 class YtChannelsRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry, Stopwatch $stopwatch, LoggerInterface $logger)
+    public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, YtChannels::class);
-        $this->stopwatch = $stopwatch;
-        $this->logger = $logger;
     }
 
 
     /**
-     * @var Stopwatch
+     * @param YtChannels $channel
+     * @return bool
      */
-    protected $stopwatch;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
     public function isChannelActive(YtChannels $channel) {
         if ($channel->getCategory()->getActive()) return true;
         return false;
     }
 
+    /**
+     * @param int $page
+     * @param int $per_page
+     * @param YtCategories|null $category
+     * @return YtChannels[]
+     */
     public function getChannelPage(int $page=1,int $per_page=10, YtCategories $category = null) {
         $query = $this->createQueryBuilder('n')
             ->addOrderBy('n.category')
@@ -56,6 +49,12 @@ class YtChannelsRepository extends ServiceEntityRepository
         return $query->getQuery()->getResult();
     }
 
+    /**
+     * @param int $per_page
+     * @param YtCategories|null $category
+     * @return int
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function countPages(int $per_page, YtCategories $category = null) {
         $query = $this->createQueryBuilder('n')
             ->select('COUNT(n.id)')
@@ -69,6 +68,11 @@ class YtChannelsRepository extends ServiceEntityRepository
         return floor($full_count/$per_page);
     }
 
+    /**
+     * @param int $startRow
+     * @param int $per_page
+     * @return YtChannels[]
+     */
     public function findActiveChannels(int $startRow=0, int $per_page=0) {
         $query = $this->createQueryBuilder('n')
             ->join('n.category','c')
@@ -83,34 +87,4 @@ class YtChannelsRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-
-
-    // /**
-    //  * @return YtChannels[] Returns an array of YtChannels objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('y')
-            ->andWhere('y.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('y.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?YtChannels
-    {
-        return $this->createQueryBuilder('y')
-            ->andWhere('y.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

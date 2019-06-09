@@ -1,5 +1,14 @@
 {% extends 'solidstate/solidstate-base.html.twig' %}
-
+{% block banner %}
+<section id="banner">
+    <div class="inner">
+        <div class="logo"><img src="{{ asset('images/demon-circle.svg') }}" alt="My avatar since 2003"></div>
+        <h2>Lukasz Andrzejak - Meltir</h2>
+        <p>Senior PHP Developer</p>
+        <p>Welcome to my personal website, I hope you like it</p>
+    </div>
+</section>
+{% endblock %}
 {% block main_body %}
     {% include 'solidstate/wide-block.html.twig' with {'wideblocks': posts} %}
 {% endblock %}

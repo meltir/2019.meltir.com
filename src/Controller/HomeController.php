@@ -14,6 +14,7 @@ use App\Entity\YtChannels;
 use App\Entity\YtVideos;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\PagePost;
@@ -108,7 +109,7 @@ class HomeController extends AbstractController {
         $videos = [];
 
         foreach ($channels as $channel) {
-            $videos[$channel->getId()] = $videos_repo->getLatestVideos($channel,4,1);
+            $videos[$channel->getId()] = $videos_repo->getLatestVideosQuery($channel,4,1)->getResult();
         }
 
         return $this->render('youtube.html.twig',[
@@ -124,8 +125,10 @@ class HomeController extends AbstractController {
         ]);
     }
 
+
+
     /**
-     * @Route("/youtube_channel_videos/{channel}/{page}", name="youtube_ajax", condition="request.isXmlHttpRequest()", methods={"GET"})
+     * @Route("/youtube_channel_videos/{channel}/{page}", name="youtube_ajax_j" , condition="request.isXmlHttpRequest()", methods={"GET"})
      * @param int $page
      * @param YtChannels $channel
      * @ParamConverter("channel",options={"mapping":{"channel" = "chan_id"}})
@@ -134,8 +137,13 @@ class HomeController extends AbstractController {
     public function next4videos($page,YtChannels $channel) {
         $videos_repo = $this->getDoctrine()
             ->getRepository(YtVideos::class);
-        $videos = $videos_repo->getLatestVideos($channel,4,$page);
+        $videos = $videos_repo->getLatestVideosQuery($channel,4,$page)->getArrayResult();
         if (count($videos)==0) return new Response('no results :(');
+        $response = new JsonResponse();
+//        var_dump($videos);
+        $videos_json = $this->get('serializer')->serialize($videos,'json');
+        $response->setData($videos_json);
+        return $response;
         return $this->render('youtube_videos.html.twig',['videos'=>$videos,'channel'=>$channel]);
     }
 

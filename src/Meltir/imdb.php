@@ -22,11 +22,20 @@ class imdb {
      */
     private $logger;
 
+    /**
+     * imdb constructor.
+     * @param EntityManagerInterface $manager
+     * @param LoggerInterface $logger
+     */
     public function __construct(EntityManagerInterface $manager, LoggerInterface $logger) {
         $this->manager = $manager;
         $this->logger = $logger;
     }
 
+    /**
+     * Fetches page from url and populates $page with the crawler for the response
+     * @param $url
+     */
     private function getUrl($url) {
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_HEADER,false);
@@ -35,10 +44,17 @@ class imdb {
         $this->page = new Crawler($response,'https://www.imdb.com');
     }
 
+    /**
+     * Fetch the first page of the reviews
+     */
     private function fetchInitialPage() {
         $this->getUrl('https://www.imdb.com/user/ur26174471/ratings');
     }
 
+    /**
+     * Find the next page url
+     * @return string
+     */
     private function getNextPage() {
         if (!$this->page) $this->fetchInitialPage();
         $selector = '#ratings-container > div.footer.filmosearch > div > div > a.flat-button.lister-page-next.next-page';
@@ -54,6 +70,7 @@ class imdb {
     /**
      * This goes to hell if imdb ever change their page layout.
      * Fortunately they have not done so in a few years.
+     * Takes in a crawler with an individual movie blok, processes it, puts it into the db
      *
      * @param Crawler $item
      * @throws \Exception
@@ -92,6 +109,12 @@ class imdb {
     }
 
 
+    /**
+     * Process a page from a url (or first page if none provided)
+     * @param string $page
+     * @return string url of the next page of reviews
+     * @throws \Exception
+     */
     public function processPage($page = '') {
         if (!$page) $this->fetchInitialPage();
         else $this->getUrl($page);

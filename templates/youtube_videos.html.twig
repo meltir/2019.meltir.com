@@ -5,7 +5,7 @@
             'title': video.title,
             'linkUrl': 'https://www.youtube.com/watch?v=' ~ video.videoid,
             'linkTitle': 'View video',
-            'body': 'Published on ' ~ video.datePublished|date('d-m-Y') }
+            'body': 'Published on ' ~ video.datePublished|date('j-n-Y') }
         %}
         {% include 'solidstate/gallery-item.html.twig'  with item %}
     {% endfor %}

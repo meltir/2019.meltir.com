@@ -56,6 +56,10 @@ class youtube {
     private $manager;
 
 
+    /**
+     * Current route is used when we need to authenticate and go back to the calling page
+     * @var string
+     */
     private $current_route = '';
 
     /**
@@ -136,6 +140,10 @@ class youtube {
         return false;
     }
 
+    /**
+     * Put the token from google into the db
+     * @param $token
+     */
     private function storeToken($token) {
         $db_token = new GoogleTokenStorage();
         $db_token->setToken($token);

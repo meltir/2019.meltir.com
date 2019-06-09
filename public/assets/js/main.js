@@ -141,55 +141,87 @@
 						$menu._hide();
 
 			});
+
 		$('.videolist_next').each(function () {
 			$(this).click(function () {
-				var button = $(this);
-				var chanid = button.attr('chanid');
-				var videodiv = $('#videos_'+chanid);
-				var page = parseInt(button.attr('page'));
+				let button = $(this);
+				let chanid = button.attr('chanid');
+				let page = parseInt(button.attr('page'));
 				let url = '/youtube_channel_videos/' + chanid + '/' + page;
+				let prev_button = $("a[chanid='" + chanid +"'].videolist_prev");
+
 				if (page==0) return;
-				$.get(url,function (response) {
-					if (response.length>100) {
-						let selector = "a[chanid='" + chanid +"'].videolist_prev";
-						let prev_button = $(selector);
-						videodiv.fadeTo("slow",0.1, function () {
-							videodiv.html(response).fadeTo("slow",1);
+				$.getJSON(url,function (response) {
+					let json = JSON.parse(response);
+					let index = 0;
+					$('#videos_'+chanid+' section article').each(function() {
+						let item = json[index];
+						index++;
+						let articleObj = $(this);
+						articleObj.fadeTo("slow",0.1,function () {
+							if (item == undefined) {
+								articleObj.slideUp("slow");
+								button.addClass('disabled');
+								button.attr('page',0);
+							} else {
+								articleObj.children('a.image_feature').children('img').attr('src',item.thumb);
+								articleObj.children('a.image_feature').children('img').attr('title',item.title);
+								articleObj.children('h3').html(item.title);
+								articleObj.children('a.special').attr('href','https://www.youtube.com/watch?v='+item.videoid);
+								let publish = new Date (item.date_published);
+								articleObj.children('p').html('Published on ' + publish.getDate() + '-' + publish.getMonth() + '-' + publish.getFullYear());
+								button.attr('page',page+1);
+								articleObj.fadeTo("slow",1);
+							}
 						});
 						prev_button.attr('page',page-1);
 						prev_button.removeClass('disabled');
-						button.attr('page',page + 1);
-					} else {
-						button.attr('page',0)
-						button.addClass('disabled');
-					}
+					});
 				});
 			});
 		});
-		$('.videolist_prev').each(function () {
-			$(this).click(function () {
-				var button = $(this);
-				var chanid = button.attr('chanid');
-				var videodiv = $('#videos_'+chanid);
-				var page = parseInt(button.attr('page'));
-				let url = '/youtube_channel_videos/' + chanid + '/' + page;
-				if (page==0) return;
-				$.get(url,function (response) {
-					let selector = "a[chanid='" + chanid +"'].videolist_next";
-					let next_button = $(selector);
-					videodiv.fadeTo("slow",0.1, function () {
-						videodiv.html(response).fadeTo("slow",1);
-					});
-					next_button.attr('page',page+1);
-					next_button.removeClass('disabled');
+	$('.videolist_prev').each(function () {
+		$(this).click(function () {
+			let button = $(this);
+			let chanid = button.attr('chanid');
+			let page = parseInt(button.attr('page'));
+			let url = '/youtube_channel_videos/' + chanid + '/' + page;
+			let next_button = $("a[chanid='" + chanid +"'].videolist_next");
+
+			if (page==0) return;
+			$.getJSON(url,function (response) {
+				let json = JSON.parse(response);
+				let index = 0;
+				next_button.attr('page',page+1);
+				next_button.removeClass('disabled');
+				$('#videos_'+chanid+' section article').each(function() {
+					let item = json[index];
+					index++;
+					let articleObj = $(this);
+					let populate = function() {
+						articleObj.children('a.image_feature').children('img').attr('src',item.thumb);
+						articleObj.children('a.image_feature').children('img').attr('title',item.title);
+						articleObj.children('h3').html(item.title);
+						let publish = new Date (item.date_published);
+						articleObj.children('p').html('Published on ' + publish.getDate() + '-' + publish.getMonth() + '-' + publish.getFullYear());
+						articleObj.children('a.special').attr('href','https://www.youtube.com/watch?v='+item.videoid);
+					};
+					if (articleObj.is(':hidden')) {
+						populate();
+						articleObj.slideDown('slow').fadeTo('slow',1);
+					} else {
+						articleObj.fadeTo('slow',0.1,function () {
+							populate();
+							articleObj.fadeTo('slow',1);
+						});
+					}
 					button.attr('page',page-1);
 					if (page==1) {
-						button.attr('page',0);
 						button.addClass('disabled');
 					}
 				});
 			});
 		});
-
+	});
 
 })(jQuery);

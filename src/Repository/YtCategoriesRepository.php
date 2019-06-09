@@ -20,6 +20,9 @@ class YtCategoriesRepository extends ServiceEntityRepository
     }
 
 
+    /**
+     * @return YtCategories[]
+     */
     public function getActiveCategories() {
         return $this->createQueryBuilder('n')
             ->andWhere('n.active = true')
@@ -28,32 +31,4 @@ class YtCategoriesRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    // /**
-    //  * @return YtCategories[] Returns an array of YtCategories objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('y')
-            ->andWhere('y.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('y.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?YtCategories
-    {
-        return $this->createQueryBuilder('y')
-            ->andWhere('y.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
